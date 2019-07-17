@@ -11,6 +11,12 @@ import java.util.ResourceBundle;
 public class TaskerController implements Initializable {
 
     @javafx.fxml.FXML
+    private javafx.scene.control.Button taskBtnMinus;
+    @javafx.fxml.FXML
+    private javafx.scene.control.Button taskBtnPlus;
+    @javafx.fxml.FXML
+    private javafx.scene.control.TableView taskTableView;
+    @javafx.fxml.FXML
     private javafx.scene.control.ListView taskListView;
     @javafx.fxml.FXML
     private javafx.scene.control.TextField taskTextField;
@@ -19,12 +25,18 @@ public class TaskerController implements Initializable {
     @javafx.fxml.FXML
     private javafx.scene.control.DatePicker taskDatePicker;
 
+    @FXML
+    private void setTaskBtnPlus(){
+        //put code here dawg for plus button
+    }
 
-
-
+    @FXML
+    private void setTaskBtnMinus(){
+        //put code here dawg for minus button
+    }
 
     public void initialize(URL url, ResourceBundle rb){
-        TodoCtrl.todoCtrl(taskListView,plsBtn,minusBtn);
+
     }
 
 }
