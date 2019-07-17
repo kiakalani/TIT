@@ -142,10 +142,21 @@ public class TodoCtrl {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Task task=new Task(textField.getText(),datePicker.getValue().getYear(),datePicker.getValue().getMonthValue(),datePicker.getValue().getDayOfMonth());
-                taskTableView.getItems().add(task);
-                new FileIO(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis()+".txt").writeObject(task);
-                task.setBtns();
+                try {
+                    Task task = new Task(textField.getText(), datePicker.getValue().getYear(), datePicker.getValue().getMonthValue(), datePicker.getValue().getDayOfMonth());
+                    taskTableView.getItems().add(task);
+                    try {
+                        new FileIO(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis() + ".txt").writeObject(task);
+                    }catch (IndexOutOfBoundsException err) {
+                        taskTableView.getItems().removeAll(taskTableView.getItems());
+                        Alert alert=new Alert(Alert.AlertType.ERROR,"Woah! Please select a task in order to add a task");
+                        alert.showAndWait();
+                    }
+                    task.setBtns();
+                }catch (NullPointerException err) {
+                    Alert alert=new Alert(Alert.AlertType.ERROR,"Woah! Please fill out all of the boxes provided");
+                    alert.showAndWait();
+                }
             }
         });
         reloadFiles(taskTableView, listView);
