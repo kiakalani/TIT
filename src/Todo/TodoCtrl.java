@@ -22,31 +22,20 @@ public class TodoCtrl {
         listView.setItems(wrds);
     }
 
-    public static void todoCtrl(ListView<String> listView,Button plsBtn,Button minusBtn) {
+    public static void todoCtrl(ListView<String> listView) {
         initializeTaskNames();
         defineListView(listView);
-        setButtonActions(listView,plsBtn,minusBtn);
     }
-    private static void setButtonActions(ListView<String> listView,Button plsBtn,Button minusBtn){
-        minusBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                removeFile(listView);
-                initializeTaskNames();
-                defineListView(listView);
-            }
-        });
-        plsBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                plsBtnActions(listView);
-            }
-        });
+
+    public static void minusBtnActions(ListView<String> listView) {
+        removeFile(listView);
+        initializeTaskNames();
+        defineListView(listView);
     }
-    private static void plsBtnActions(ListView<String> listView) {
+    public static void plsBtnActions(ListView<String> listView) {
         TextInputDialog textInputDialog=new TextInputDialog();
         textInputDialog.setContentText("Please insert the task name:");
-        String taskName=textInputDialog.showAndWait().toString();
+        String taskName=textInputDialog.showAndWait().get();
         new File("bin/todo/"+taskName).mkdirs();
         initializeTaskNames();
         defineListView(listView);

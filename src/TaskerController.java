@@ -28,15 +28,17 @@ public class TaskerController implements Initializable {
     @FXML
     private void setTaskBtnPlus(){
         //put code here dawg for plus button
+        TodoCtrl.plsBtnActions(taskListView);
     }
 
     @FXML
     private void setTaskBtnMinus(){
         //put code here dawg for minus button
+        TodoCtrl.minusBtnActions(taskListView);
     }
 
     public void initialize(URL url, ResourceBundle rb){
-
+        TodoCtrl.todoCtrl(taskListView);
     }
 
 }

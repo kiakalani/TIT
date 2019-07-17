@@ -15,8 +15,8 @@
       <DatePicker id="taskDatePicker" fx:id="taskDatePicker" layoutX="279.0" layoutY="10.0" />
       <ColorPicker id="taskColorPicker" fx:id="TaskColorPicker" layoutX="468.0" layoutY="10.0" />
       <TextField id="taskTextField" fx:id="taskTextField" layoutX="112.0" layoutY="10.0" promptText="write ur task" />
-      <Button id="taskBtnPlus" fx:id="taskBtnPlus" layoutX="14.0" layoutY="363.0" mnemonicParsing="false" onMouseClicked="#setTaskBtnPlus" text="+" />
-      <Button id="taskBtnMinus" fx:id="taskBtnMinus" layoutX="49.0" layoutY="363.0" mnemonicParsing="false" onMousePressed="#setTaskBtnMinus" text="-" />
+      <Button id="taskBtnPlus" fx:id="taskBtnPlus" layoutX="14.0" layoutY="363.0" mnemonicParsing="false" onAction="#setTaskBtnPlus" text="+" />
+      <Button id="taskBtnMinus" fx:id="taskBtnMinus" layoutX="49.0" layoutY="363.0" mnemonicParsing="false" onAction="#setTaskBtnMinus" text="-" />
       <TableView id="taskTableView" fx:id="taskTableView" layoutX="107.0" layoutY="59.0" prefHeight="334.0" prefWidth="474.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
