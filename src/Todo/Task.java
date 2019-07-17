@@ -3,18 +3,21 @@ package Todo;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
-public class Task {
+public class Task implements Serializable {
     private String name;
-    private Date due;
+    private LocalDate due;
     private ImageView priority;
     private Button priorityIllustrator;
     private Button terminate;
 
-    public Task(String name, Date due) {
+    public Task(String name, LocalDate due,ImageView priority) {
         this.name = name;
         this.due = due;
+        terminate=new Button("X");
     }
 
     public String getName() {
@@ -25,11 +28,11 @@ public class Task {
         this.name = name;
     }
 
-    public Date getDue() {
+    public LocalDate getDue() {
         return due;
     }
 
-    public void setDue(Date due) {
+    public void setDue(LocalDate due) {
         this.due = due;
     }
 
