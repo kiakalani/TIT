@@ -1,6 +1,10 @@
+import Todo.Task;
 import Todo.TodoCtrl;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,8 +21,10 @@ public class TaskerController implements Initializable {
 
 
 
+
+
     public void initialize(URL url, ResourceBundle rb){
-        TodoCtrl.todoCtrl(taskListView);
+        TodoCtrl.todoCtrl(taskListView,plsBtn,minusBtn);
     }
 
 }

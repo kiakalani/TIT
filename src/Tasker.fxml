@@ -15,9 +15,9 @@
       <DatePicker id="taskDatePicker" fx:id="taskDatePicker" layoutX="279.0" layoutY="10.0" />
       <ColorPicker id="taskColorPicker" fx:id="TaskColorPicker" layoutX="468.0" layoutY="10.0" />
       <TextField id="taskTextField" fx:id="taskTextField" layoutX="112.0" layoutY="10.0" promptText="write ur task" />
-      <Button layoutX="14.0" layoutY="363.0" mnemonicParsing="false" text="+" />
-      <Button layoutX="49.0" layoutY="363.0" mnemonicParsing="false" text="-" />
-      <TableView layoutX="107.0" layoutY="59.0" prefHeight="334.0" prefWidth="474.0">
+      <Button id="plsBtn" layoutX="14.0" layoutY="363.0" mnemonicParsing="false" text="+" />
+      <Button id="minusBtn" layoutX="49.0" layoutY="363.0" mnemonicParsing="false" text="-" />
+      <TableView id="taskTable" layoutX="107.0" layoutY="59.0" prefHeight="334.0" prefWidth="474.0">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
