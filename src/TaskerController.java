@@ -47,6 +47,7 @@ public class TaskerController implements Initializable {
         TodoCtrl.todoCtrl(taskListView);
         TodoCtrl.manageTable(taskTableView);
         TodoCtrl.addButtonSetup(addButton,taskListView,taskTableView,taskTextField,taskDatePicker);
+        TodoCtrl.setList(taskListView,taskTableView);
     }
 
 }

@@ -1,22 +1,57 @@
 package Todo;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Task implements Serializable {
     private String name;
     private LocalDate due;
-    private ImageView priority;
+//    private ImageView priority;
     private Button priorityIllustrator;
     private Button terminate;
+    private enum PriorityEnum{
+        LOW,MEDIUM,HIGH
+    }
+    private PriorityEnum priorityDefiner;
+    public Task(String name,int year, int month, int day) {
+        this.name=name;
+        due=LocalDate.of(year,month,day);
+        priorityDefiner=PriorityEnum.LOW;
+        System.out.println(priorityDefiner.ordinal());
+        System.out.println("Todo/priority/"+(priorityDefiner.ordinal()+1)+".jpg");
+//        priorityIllustrator=new Button(priorityDefiner.toString());
+//
+//        priorityIllustrator.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                if (priorityDefiner.ordinal()!=2) {
+//                    priorityDefiner = PriorityEnum.values()[priorityDefiner.ordinal() + 1];
+//                }else priorityDefiner=PriorityEnum.LOW;
+//                priorityIllustrator.setText(priorityDefiner.toString());
+//            }
+//        });
+//        terminate=new Button("X");
+    }
+    public void setBtns() {
+        priorityIllustrator=new Button(priorityDefiner.toString());
 
-    public Task(String name, LocalDate due,ImageView priority) {
-        this.name = name;
-        this.due = due;
+        priorityIllustrator.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (priorityDefiner.ordinal()!=2) {
+                    priorityDefiner = PriorityEnum.values()[priorityDefiner.ordinal() + 1];
+                }else priorityDefiner=PriorityEnum.LOW;
+                priorityIllustrator.setText(priorityDefiner.toString());
+            }
+        });
         terminate=new Button("X");
     }
 
@@ -24,39 +59,36 @@ public class Task implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getDue() {
         return due;
     }
 
-    public void setDue(LocalDate due) {
-        this.due = due;
-    }
+//    public ImageView getPriority() {
+//        return priority;
+//    }
 
-    public ImageView getPriority() {
-        return priority;
-    }
-
-    public void setPriority(ImageView priority) {
-        this.priority = priority;
-    }
-
-    public Button getPriorityIllustrator() {
-        return priorityIllustrator;
-    }
-
-    public void setPriorityIllustrator(Button priorityIllustrator) {
-        this.priorityIllustrator = priorityIllustrator;
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", due=" + due +
+                ", priorityIllustrator=" + priorityIllustrator +
+                ", terminate=" + terminate +
+                ", priorityDefiner=" + priorityDefiner +
+                '}';
     }
 
     public Button getTerminate() {
         return terminate;
     }
 
-    public void setTerminate(Button terminate) {
-        this.terminate = terminate;
+    public PriorityEnum getPriorityDefiner() {
+        return priorityDefiner;
     }
+
+    public Button getPriorityIllustrator() {
+        return priorityIllustrator;
+    }
+
 }
+

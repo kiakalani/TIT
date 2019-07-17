@@ -8,14 +8,27 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.io.*;
 
 public class TodoCtrl {
+    /**
+     * A file array for getting all the task roots
+     */
     private static File[] taskNames;
+
+    /**
+     * Listing all the tasks in the project
+     */
     private static void initializeTaskNames() {
         taskNames=new File("bin/todo").listFiles();
     }
+
+    /**
+     * Setting the items inside the list view
+     * @param listView is the listview illustrated in the project
+     */
     private static void defineListView(ListView<String> listView) { //Works fine
         ObservableList<String> wrds= FXCollections.observableArrayList();
         for (File file:taskNames) {
@@ -23,20 +36,38 @@ public class TodoCtrl {
         }
         listView.setItems(wrds);
     }
+
+    /**
+     * Removing the selected file by pressing the - button
+     * @param listView
+     */
     private static void removeFile(ListView<String> listView) { //Works fine
         taskNames[listView.getSelectionModel().getSelectedIndex()].delete();
     }
 
+    /**
+     * This function renews the task names in case of change and then deals with resetting the listview
+     * @param listView
+     */
     public static void todoCtrl(ListView<String> listView) {    //Works fine
         initializeTaskNames();
         defineListView(listView);
     }
 
+    /**
+     * The - button actions
+     * @param listView
+     */
     public static void minusBtnActions(ListView<String> listView) { //Works fine
         removeFile(listView);
         initializeTaskNames();
         defineListView(listView);
     }
+
+    /**
+     * + button actions
+     * @param listView
+     */
     public static void plsBtnActions(ListView<String> listView) {   //Works fine
         TextInputDialog textInputDialog=new TextInputDialog();
         textInputDialog.setContentText("Please insert the task name:");
@@ -45,50 +76,115 @@ public class TodoCtrl {
         initializeTaskNames();
         defineListView(listView);
     }
-    public static void loadTodoFiles(ListView<String> listView) {   //Not used yet but would probably work
+
+    /**
+     * This function loads the files inside a folder(Still working on it)
+     * @param listView
+     * @param taskTableView
+     */
+    private static void loadTodoFiles(ListView<String> listView,TableView<Task>taskTableView) {   //Not used yet but would probably work
         File[] files=new File("bin/todo/"+listView.getSelectionModel().getSelectedItem()).listFiles();
+        System.out.println(files.length);
         ObservableList<Task> tasks=FXCollections.observableArrayList();
-        try {
-            try {
-                for (File file : files) {
-                    tasks.add((Task) (new ObjectInputStream(new FileInputStream(file)).readObject()));
-                }
-            }catch (IOException error) {
-                System.out.println("Error 404");
-            }
-        }catch (ClassNotFoundException err) {
-            System.out.println("Critical error");
+        for (File file : files) {
+            tasks.add((Task)new FileIO(file).readObject());
         }
+        for (Task task:tasks) {
+            task.setBtns();
+        }
+        setList(listView, taskTableView);
+        taskTableView.setItems(tasks);
+
     }
-    public static void manageTable(TableView<Task> taskTableView) {
+
+    /**
+     * When the user clicks on an option in this listview, it would show all the tasks inside.
+     * @param listView
+     * @param taskTableView
+     */
+    public static void setList(ListView<String> listView,TableView<Task>taskTableView) {
+
+        listView.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                loadTodoFiles(listView,taskTableView);
+                reloadFiles(taskTableView,listView);
+            }
+        });
+        taskTableView.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                reloadFiles(taskTableView,listView);
+            }
+        });
+    }
+
+    /**
+     * Defining the table's behaviour towards the matters
+     * @param taskTableView
+     */
+    public static void manageTable(TableView<Task> taskTableView) { //Partially done
         taskTableView.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("name"));
         taskTableView.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("due"));
         taskTableView.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("priorityIllustrator"));
         taskTableView.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("terminate"));
-        for (Task task:taskTableView.getItems()) {  //Doesn't work yet...
-            task.getTerminate().setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    System.out.println("Terminated");   //code here
-                }
-            });
-        }
     }
+
+    /**
+     * Defining the behavior of add button when the user decides to add a task to their todo
+     * @param addButton
+     * @param listView
+     * @param taskTableView
+     * @param textField
+     * @param datePicker
+     */
     public static void addButtonSetup(Button addButton,ListView<String>listView,TableView<Task> taskTableView,TextField textField,DatePicker datePicker) {  //Works for now
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Task task=new Task(textField.getText(),datePicker.getValue(),new ImageView());
+                Task task=new Task(textField.getText(),datePicker.getValue().getYear(),datePicker.getValue().getMonthValue(),datePicker.getValue().getDayOfMonth());
                 taskTableView.getItems().add(task);
-                try {
-                    ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis())));
-                    o.writeObject(task);
-                    o.close();
-                }catch (IOException err) {
-
-                }
+                new FileIO(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis()+".txt").writeObject(task);
+                task.setBtns();
             }
         });
+        reloadFiles(taskTableView, listView);
+    }
+
+    /**
+     * This function is for the matter of modifying the current files if any change happens to the objects
+     * @param taskTableView
+     * @param listView
+     */
+    private static void updateFiles(TableView<Task> taskTableView,ListView<String>listView) {
+        File[] flusher=taskNames[listView.getSelectionModel().getSelectedIndex()].listFiles();
+        for (File file:flusher) {
+            file.delete();
+        }
+        for (int i=0;i<taskTableView.getItems().size();i++) {
+            new FileIO(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis()+".txt").writeObject(taskTableView.getItems().get(i));
+        }
+    }
+
+    /**
+     * This method would deal with updating the status of files once they have been removed from the project
+     * @param taskTableView
+     * @param listView
+     */
+    public static void reloadFiles(TableView<Task> taskTableView,ListView<String> listView) {
+        for (int i=0;i<taskTableView.getItems().size();i++) {
+            final int num=i;
+            taskTableView.getItems().get(i).getTerminate().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    File[] files=taskNames[listView.getSelectionModel().getSelectedIndex()].listFiles();
+                    files[num].delete();
+                    System.out.println("Done");
+                    loadTodoFiles(listView, taskTableView);
+                    reloadFiles(taskTableView, listView);
+                }
+            });
+        }
     }
 
 }
