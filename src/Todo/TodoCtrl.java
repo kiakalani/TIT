@@ -36,6 +36,20 @@ public class TodoCtrl {
                 defineListView(listView);
             }
         });
+        plsBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                plsBtnActions(listView);
+            }
+        });
+    }
+    private static void plsBtnActions(ListView<String> listView) {
+        TextInputDialog textInputDialog=new TextInputDialog();
+        textInputDialog.setContentText("Please insert the task name:");
+        String taskName=textInputDialog.showAndWait().toString();
+        new File("bin/todo/"+taskName).mkdirs();
+        initializeTaskNames();
+        defineListView(listView);
     }
     private static void removeFile(ListView<String> listView) {
         taskNames[listView.getSelectionModel().getSelectedIndex()].delete();
