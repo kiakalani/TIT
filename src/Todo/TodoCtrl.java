@@ -195,6 +195,21 @@ public class TodoCtrl {
                     reloadFiles(taskTableView, listView);
                 }
             });
+            taskTableView.getItems().get(i).getPriorityIllustrator().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (taskTableView.getItems().get(num).getPriorityDefiner().ordinal()!=2) {
+                        taskTableView.getItems().get(num).setPriorityDefiner(Task.PriorityEnum.values()[taskTableView.getItems().get(num).getPriorityDefiner().ordinal() + 1]);
+                    }else taskTableView.getItems().get(num).setPriorityDefiner(Task.PriorityEnum.LOW);
+                    File[] files=taskNames[listView.getSelectionModel().getSelectedIndex()].listFiles();
+                    Task task=new Task(taskTableView.getItems().get(num).getName(),taskTableView.getItems().get(num).getDue().getYear(),taskTableView.getItems().get(num).getDue().getMonthValue(),taskTableView.getItems().get(num).getDue().getDayOfMonth());
+                    task.setPriorityDefiner(taskTableView.getItems().get(num).getPriorityDefiner());
+                    new FileIO(files[num]).writeObject(task);
+                    taskTableView.getItems().get(num).getPriorityIllustrator().setText(taskTableView.getItems().get(num).getPriorityDefiner().toString());
+                    loadTodoFiles(listView, taskTableView);
+                    reloadFiles(taskTableView, listView);
+                }
+            });
         }
     }
 

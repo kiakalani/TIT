@@ -17,7 +17,7 @@ public class Task implements Serializable {
 //    private ImageView priority;
     private Button priorityIllustrator;
     private Button terminate;
-    private enum PriorityEnum{
+    protected enum PriorityEnum{
         LOW,MEDIUM,HIGH
     }
     private PriorityEnum priorityDefiner;
@@ -90,5 +90,8 @@ public class Task implements Serializable {
         return priorityIllustrator;
     }
 
+    public void setPriorityDefiner(PriorityEnum priorityDefiner) {
+        this.priorityDefiner = priorityDefiner;
+    }
 }
 
