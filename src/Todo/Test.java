@@ -1,7 +1,14 @@
 package Todo;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Date;
+
 public class Test {
     public static void main(String[] args) {
-        System.out.println((Task)new FileIO("todo/2/1563409589112.txt").readObject());
+        LocalDate today=LocalDate.now();
+        LocalDate target=LocalDate.of(2019,7,28);
+
+        System.out.println(Duration.between(today.atStartOfDay(),target.atStartOfDay()).toDays());
     }
 }

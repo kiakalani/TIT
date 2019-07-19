@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDate;
 
 public class TodoCtrl {
     /**
@@ -42,6 +44,7 @@ public class TodoCtrl {
      * @param listView
      */
     private static void removeFile(ListView<String> listView) { //Works fine
+        if (listView.getSelectionModel().getSelectedIndex()!=-1)
         taskNames[listView.getSelectionModel().getSelectedIndex()].delete();
     }
 
@@ -83,17 +86,19 @@ public class TodoCtrl {
      * @param taskTableView
      */
     private static void loadTodoFiles(ListView<String> listView,TableView<Task>taskTableView) {   //Not used yet but would probably work
-        File[] files=new File("bin/todo/"+listView.getSelectionModel().getSelectedItem()).listFiles();
-        System.out.println(files.length);
-        ObservableList<Task> tasks=FXCollections.observableArrayList();
-        for (File file : files) {
-            tasks.add((Task)new FileIO(file).readObject());
+        if (listView.getSelectionModel().getSelectedIndex()!=-1) {
+            File[] files = new File("bin/todo/" + listView.getSelectionModel().getSelectedItem()).listFiles();
+//        System.out.println(files.length);
+            ObservableList<Task> tasks = FXCollections.observableArrayList();
+            for (File file : files) {
+                tasks.add((Task) new FileIO(file).readObject());
+            }
+            for (Task task : tasks) {
+                task.setBtns();
+            }
+            setList(listView, taskTableView);
+            taskTableView.setItems(tasks);
         }
-        for (Task task:tasks) {
-            task.setBtns();
-        }
-        setList(listView, taskTableView);
-        taskTableView.setItems(tasks);
 
     }
 
@@ -109,6 +114,7 @@ public class TodoCtrl {
             public void handle(MouseEvent event) {
                 loadTodoFiles(listView,taskTableView);
                 reloadFiles(taskTableView,listView);
+                taskTableView.getSortOrder().add(taskTableView.getColumns().get(1));
             }
         });
         taskTableView.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -126,8 +132,11 @@ public class TodoCtrl {
     public static void manageTable(TableView<Task> taskTableView) { //Partially done
         taskTableView.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("name"));
         taskTableView.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("due"));
-        taskTableView.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("priorityIllustrator"));
-        taskTableView.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("terminate"));
+        taskTableView.getColumns().get(2).setCellValueFactory(new PropertyValueFactory<>("daysRemaining"));
+        taskTableView.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("priorityIllustrator"));
+        taskTableView.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("terminate"));
+        taskTableView.getSortOrder().add(taskTableView.getColumns().get(1));
+
     }
 
     /**
@@ -143,7 +152,8 @@ public class TodoCtrl {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    Task task = new Task(textField.getText(), datePicker.getValue().getYear(), datePicker.getValue().getMonthValue(), datePicker.getValue().getDayOfMonth());
+                    String remaining= Duration.between(LocalDate.now().atStartOfDay(),datePicker.getValue().atStartOfDay()).toDays()+"";
+                    Task task = new Task(textField.getText(), datePicker.getValue().getYear(), datePicker.getValue().getMonthValue(), datePicker.getValue().getDayOfMonth(),remaining);
                     taskTableView.getItems().add(task);
                     try {
                         new FileIO(taskNames[listView.getSelectionModel().getSelectedIndex()].getAbsolutePath() + "/" + System.currentTimeMillis() + ".txt").writeObject(task);
@@ -202,7 +212,8 @@ public class TodoCtrl {
                         taskTableView.getItems().get(num).setPriorityDefiner(Task.PriorityEnum.values()[taskTableView.getItems().get(num).getPriorityDefiner().ordinal() + 1]);
                     }else taskTableView.getItems().get(num).setPriorityDefiner(Task.PriorityEnum.LOW);
                     File[] files=taskNames[listView.getSelectionModel().getSelectedIndex()].listFiles();
-                    Task task=new Task(taskTableView.getItems().get(num).getName(),taskTableView.getItems().get(num).getDue().getYear(),taskTableView.getItems().get(num).getDue().getMonthValue(),taskTableView.getItems().get(num).getDue().getDayOfMonth());
+                    String remaining= Duration.between(LocalDate.now().atStartOfDay(),taskTableView.getItems().get(num).getDue().atStartOfDay()).toDays()+"";
+                    Task task=new Task(taskTableView.getItems().get(num).getName(),taskTableView.getItems().get(num).getDue().getYear(),taskTableView.getItems().get(num).getDue().getMonthValue(),taskTableView.getItems().get(num).getDue().getDayOfMonth(),remaining);
                     task.setPriorityDefiner(taskTableView.getItems().get(num).getPriorityDefiner());
                     new FileIO(files[num]).writeObject(task);
                     taskTableView.getItems().get(num).getPriorityIllustrator().setText(taskTableView.getItems().get(num).getPriorityDefiner().toString());

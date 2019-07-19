@@ -18,9 +18,10 @@
       <TableView id="taskTableView" fx:id="taskTableView" layoutX="107.0" layoutY="59.0" prefHeight="334.0" prefWidth="474.0">
         <columns>
           <TableColumn id="nameColumn" fx:id="nameColumn" prefWidth="159.0" text="Name" />
-          <TableColumn id="dueColumn" fx:id="dueColumn" prefWidth="174.0" text="Due" />
-            <TableColumn id="priorityColumn" fx:id="priorityColumn" prefWidth="71.0" text="Priority" />
-            <TableColumn id="terminateColumn" fx:id="terminateColumn" prefWidth="69.0" text="Terminate" />
+          <TableColumn id="dueColumn" fx:id="dueColumn" prefWidth="82.0" text="Due" />
+            <TableColumn minWidth="0.0" prefWidth="77.0" text="In" />
+            <TableColumn id="priorityColumn" fx:id="priorityColumn" prefWidth="91.0" text="Priority" />
+            <TableColumn id="terminateColumn" fx:id="terminateColumn" minWidth="0.0" prefWidth="64.0" text="Terminate" />
         </columns>
       </TableView>
       <Button id="addButton" fx:id="addButton" layoutX="535.0" layoutY="10.0" mnemonicParsing="false" text="Add" />

@@ -17,11 +17,12 @@ public class Task implements Serializable {
 //    private ImageView priority;
     private Button priorityIllustrator;
     private Button terminate;
+    private String daysRemaining;
     protected enum PriorityEnum{
         LOW,MEDIUM,HIGH
     }
     private PriorityEnum priorityDefiner;
-    public Task(String name,int year, int month, int day) {
+    public Task(String name,int year, int month, int day,String daysRemaining) {
         this.name=name;
         due=LocalDate.of(year,month,day);
         priorityDefiner=PriorityEnum.LOW;
@@ -39,6 +40,7 @@ public class Task implements Serializable {
 //            }
 //        });
 //        terminate=new Button("X");
+        this.daysRemaining=daysRemaining+" days";
     }
     public void setBtns() {
         priorityIllustrator=new Button(priorityDefiner.toString());
@@ -92,6 +94,14 @@ public class Task implements Serializable {
 
     public void setPriorityDefiner(PriorityEnum priorityDefiner) {
         this.priorityDefiner = priorityDefiner;
+    }
+
+    public String getDaysRemaining() {
+        return daysRemaining;
+    }
+
+    public void setDaysRemaining(String daysRemaining) {
+        this.daysRemaining = daysRemaining;
     }
 }
 
